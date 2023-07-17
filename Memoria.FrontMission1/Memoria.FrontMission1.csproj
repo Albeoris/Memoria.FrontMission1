@@ -1,0 +1,86 @@
+<?xml version="1.0" encoding="utf-8"?>
+<Project Sdk="Microsoft.NET.Sdk">
+	
+	<PropertyGroup>
+		<Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
+		<Platform Condition=" '$(Configuration)' == '' ">Steam</Platform>
+    </PropertyGroup>
+    
+	<PropertyGroup>
+        <ProjectGuid>{81953FA5-C096-4738-850F-ADB54A5D5A9B}</ProjectGuid>
+        <RootNamespace>Memoria.FrontMission1</RootNamespace>
+		<TargetFramework>net462</TargetFramework>
+		<ImplicitUsings>false</ImplicitUsings>
+		<Nullable>disable</Nullable>
+    </PropertyGroup>
+	
+	<PropertyGroup>
+		<AssemblyName>Memoria.FrontMission1.$(Configuration)</AssemblyName>
+		<GameRegistryPath Condition=" '$(Configuration)' == 'Steam' ">HKEY_LOCAL_MACHINE\Software\Microsoft\Windows\CurrentVersion\Uninstall\Steam App 2399730</GameRegistryPath>
+	</PropertyGroup>
+	
+	<PropertyGroup Condition="'$(GameRegistryPath)' != ''">
+		<GamePath Condition="'$(GamePath)' == ''">$([MSBuild]::GetRegistryValueFromView('$(GameRegistryPath)', 'InstallLocation', null, RegistryView.Registry32))</GamePath>
+		<GamePath Condition="'$(GamePath)' == ''">$([MSBuild]::GetRegistryValueFromView('$(GameRegistryPath)', 'InstallLocation', null, RegistryView.Registry64))</GamePath>
+		<GamePath Condition="'$(GamePath)' == ''">bin\$(AssemblyName)</GamePath>
+		<FrameworkPathOverride>$(GamePath)\FRONT MISSION 1st Remake_Data\Managed</FrameworkPathOverride>
+		<OutputPath>$(GamePath)\BepInEx\plugins\</OutputPath>
+	</PropertyGroup>
+	
+	
+	<ItemGroup>
+		<Compile Remove="Steam\**\*.cs" />	
+		<None Include="Steam\**\*.cs" />
+		<Compile Include="$(Configuration)\**\*.cs" />
+	</ItemGroup>
+  
+	<ItemGroup>
+		<ProjectReference Include="..\Memoria.CodeGenerator\Memoria.CodeGenerator.csproj" OutputItemType="Analyzer" ReferenceOutputAssembly="false" />
+	</ItemGroup>
+	
+	<ItemGroup>
+		<Reference Include="0Harmony">
+		<HintPath>$(GamePath)\BepInEx\core\0Harmony.dll</HintPath>
+		<Private>False</Private>
+		</Reference>
+		<Reference Include="BepInEx.Core">
+		<HintPath>$(GamePath)\BepInEx\core\BepInEx.Core.dll</HintPath>
+		<Private>False</Private>
+		</Reference>
+		<Reference Include="BepInEx.Unity">
+		<HintPath>$(GamePath)\BepInEx\core\BepInEx.Unity.dll</HintPath>
+		<Private>False</Private>
+		</Reference>
+	</ItemGroup>
+		
+	<ItemGroup>
+		<Reference Include="System" />
+		<Reference Include="System.Core" />
+		<Reference Include="UnityEngine" />
+		<Reference Include="UnityEngine.CoreModule" />
+		<Reference Include="UnityEngine.InputModule" />
+		<Reference Include="UnityEngine.InputLegacyModule" />
+		<Reference Include="UnityEngine.IMGUIModule" />
+		<Reference Include="Assembly-CSharp.dll" />
+	</ItemGroup>
+		
+	<ItemGroup>
+	  <PackageReference Include="Newtonsoft.Json" Version="13.0.3" />
+	</ItemGroup>
+  
+    <Target Name="CompileAll" AfterTargets="Build">
+		<MSBuild Condition=" '$(Configuration)' != 'Steam' " Projects="$(MSBuildProjectFile)" Properties="Configuration=Steam" RunEachTargetSeparately="true" BuildInParallel="true" />
+	</Target>
+	
+	<Target Name="PublishAll" AfterTargets="Publish">
+		<MSBuild Condition=" '$(Configuration)' != 'Steam' " Projects="$(MSBuildProjectFile)" Properties="Configuration=Steam" Targets="Publish" RunEachTargetSeparately="true" BuildInParallel="true" />
+	</Target>
+
+	<UsingTask TaskName="Memoria.MSBuild.Pack" AssemblyFile="..\MSBuild\Memoria.MSBuild.dll" />
+	
+	<Target Name="PublishAll" AfterTargets="Publish">
+		<MSBuild Condition=" '$(Configuration)' != 'Steam' " Projects="$(MSBuildProjectFile)" Properties="Configuration=Steam" Targets="Publish" RunEachTargetSeparately="true" BuildInParallel="true" />
+		<Pack PublishDirectory="..\Publish" Configuration="$(Configuration)" />
+	</Target>
+
+</Project>
