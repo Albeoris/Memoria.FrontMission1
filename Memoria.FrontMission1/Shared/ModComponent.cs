@@ -4,6 +4,7 @@ using Memoria.FrontMission1.Configuration;
 using Memoria.FrontMission1.Core;
 using Memoria.FrontMission1.Mods;
 using UnityEngine;
+using Walker;
 using Exception = System.Exception;
 using Logger = BepInEx.Logging.Logger;
 using Object = System.Object;
@@ -17,13 +18,14 @@ public sealed class ModComponent : MonoBehaviour
 
     [field: NonSerialized] public ModConfiguration Config { get; private set; }
     [field: NonSerialized] public GameSpeedControl SpeedControl { get; private set; }
-    [field: NonSerialized] public ModFileResolver ModFiles { get; set; }
+    [field: NonSerialized] public ModFileResolver ModFiles { get; private set; }
+    [field: NonSerialized] public ArenaWinsControl ArenaWins { get; private set; }
 
     private Boolean _isDisabled;
 
     public void Awake()
     {
-        Log = Logger.CreateLogSource("Memoria IL2CPP");
+        Log = Logger.CreateLogSource("Memoria");
         Log.LogMessage($"[{nameof(ModComponent)}].{nameof(Awake)}(): Begin...");
         try
         {
@@ -32,6 +34,8 @@ public sealed class ModComponent : MonoBehaviour
             Config = new ModConfiguration();
             SpeedControl = new GameSpeedControl();
             ModFiles = new ModFileResolver();
+
+            ArenaWins = new ArenaWinsControl();
 
             Log.LogMessage($"[{nameof(ModComponent)}].{nameof(Awake)}(): Processed successfully.");
         }
@@ -68,6 +72,8 @@ public sealed class ModComponent : MonoBehaviour
         {
             if (_isDisabled)
                 return;
+
+            ModFiles.TryUpdate();
         }
         catch (Exception ex)
         {

@@ -2,24 +2,35 @@
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
+using System.Threading;
 using Memoria.FrontMission1.Configuration;
+using Memoria.FrontMission1.Core;
+using Memoria.FrontMission1.HarmonyHooks;
+using Walker;
 
 namespace Memoria.FrontMission1.Mods;
 
-public sealed class ModFileResolver
+public sealed class ModFileResolver : SafeComponent
 {
+    private readonly Object _lock = new();
     private readonly String _modsRoot;
-    private readonly Dictionary<String, List<String>> _catalog;
-
+    
+    private Dictionary<String, List<String>> _catalog;
+    private Int64 _fileVersion;
+    private Int64 _catalogVersion;
+    private FileSystemWatcher _watcher;
+    
     public ModFileResolver()
     {
         _modsRoot = ModComponent.Instance.Config.Assets.ModsDirectory;
         _catalog = IndexMods(_modsRoot);
     }
 
+    public Int64 CurrentVersion => Interlocked.Read(ref _fileVersion);
+
     public IReadOnlyList<String> FindAll(String assetAddress)
     {
-        if (!_catalog.TryGetValue(assetAddress, out List<String> modNames))
+        if (!GetActualCatalog().TryGetValue(assetAddress, out List<String> modNames))
             return Array.Empty<String>();
 
         return modNames.Select(n => Path.Combine(_modsRoot, n, assetAddress)).ToArray();
@@ -29,7 +40,7 @@ public sealed class ModFileResolver
     {
         List<String> result = new List<String>();
 
-        foreach ((String assetPath, List<String> modNames) in _catalog)
+        foreach ((String assetPath, List<String> modNames) in GetActualCatalog())
         {
             if (!assetPath.StartsWith(assetRoot))
                 continue;
@@ -40,8 +51,75 @@ public sealed class ModFileResolver
 
         return result;
     }
+    
+    protected override void Update()
+    {
+        RefreshWatcher();
+        
+        if (!TryRefreshCatalog())
+            return;
 
-    private static Dictionary<String, List<String>> IndexMods(String modsRoot)
+        LocalizedMessagesProxy.SetLanguage(newLanguage: Localization.language, force: true, callEvent: true);
+    }
+
+    private Boolean TryRefreshCatalog()
+    {
+        if (!ModComponent.Instance.Config.Assets.ModsEnabled)
+            return false;
+
+        Int64 fileVersion = Interlocked.Read(ref _fileVersion);
+        Int64 currentVersion = Interlocked.Read(ref _catalogVersion);
+        if (fileVersion == currentVersion)
+            return false;
+
+        while (true)
+        {
+            fileVersion = Interlocked.Read(ref _fileVersion);
+            currentVersion = Interlocked.Read(ref _catalogVersion);
+            if (fileVersion == currentVersion)
+                break;
+
+            _catalog = IndexMods(_modsRoot);
+
+            _catalogVersion = fileVersion;
+            ModComponent.Log.LogInfo($"[Mods] Mod catalog has been refreshed: {currentVersion} -> {fileVersion}");
+        }
+
+        return true;
+    }
+
+    private Dictionary<String, List<String>> GetActualCatalog()
+    {
+        RefreshWatcher();
+
+        Dictionary<String, List<String>> catalog = _catalog;
+        
+        Int64 fileVersion = Interlocked.Read(ref _fileVersion);
+        Int64 currentVersion = Interlocked.Read(ref _catalogVersion);
+        if (fileVersion == currentVersion)
+            return catalog;
+        
+        lock (_lock)
+        {
+            while (true)
+            {
+                fileVersion = Interlocked.Read(ref _fileVersion);
+                currentVersion = Interlocked.Read(ref _catalogVersion);
+                if (fileVersion == currentVersion)
+                    break;
+                    
+                catalog = IndexMods(_modsRoot);
+                _catalog = catalog;
+
+                _catalogVersion = fileVersion;
+                ModComponent.Log.LogInfo($"[Mods] Mod catalog has been refreshed: {currentVersion} -> {fileVersion}");
+            }
+        }
+
+        return catalog;
+    }
+
+    private Dictionary<String, List<String>> IndexMods(String modsRoot)
     {
         Dictionary<String, List<String>> catalog = new(StringComparer.InvariantCultureIgnoreCase);
 
@@ -79,6 +157,48 @@ public sealed class ModFileResolver
             }
         }
 
+        RefreshWatcher();
+
         return catalog;
+    }
+
+    private void RefreshWatcher()
+    {
+        Boolean watchingEnabled = ModComponent.Instance.Config.Assets.ModsEnabled && ModComponent.Instance.Config.Assets.WatchingEnabled;
+        FileSystemWatcher watcher = _watcher;
+        if (watcher != null)
+        {
+            if (watcher.EnableRaisingEvents)
+            {
+                if (!watchingEnabled)
+                {
+                    watcher.EnableRaisingEvents = false;
+                    ModComponent.Log.LogInfo($"[Mods] Directory watching disabled.");
+                }
+            }
+            else if (watchingEnabled)
+            {
+                watcher.EnableRaisingEvents = true;
+                ModComponent.Log.LogInfo($"[Mods] Directory watching enabled.");
+            }
+        }
+        else if (watchingEnabled)
+        {
+            lock (_lock)
+            {
+                if (watcher is null)
+                {
+                    watcher = new FileSystemWatcher(_modsRoot);
+                    watcher.IncludeSubdirectories = true;
+                    watcher.Created += (sender, args) => Interlocked.Increment(ref _fileVersion);
+                    watcher.Changed += (sender, args) => Interlocked.Increment(ref _fileVersion);
+                    watcher.Renamed += (sender, args) => Interlocked.Increment(ref _fileVersion);
+                    watcher.Deleted += (sender, args) => Interlocked.Increment(ref _fileVersion);
+                    watcher.EnableRaisingEvents = true;
+                    _watcher = watcher;
+                    ModComponent.Log.LogInfo($"[Mods] Directory watching started.");
+                }
+            }
+        }
     }
 }

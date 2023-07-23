@@ -7,6 +7,7 @@ public sealed partial class ModConfiguration
 {
     public SpeedConfiguration Speed { get; }
     public AssetsConfiguration Assets { get; }
+    public ArenaConfiguration Arena { get; }
 
     public ModConfiguration()
     {
@@ -19,6 +20,7 @@ public sealed partial class ModConfiguration
                 ConfigFileProvider provider = new();
                 Speed = SpeedConfiguration.Create(provider);
                 Assets = AssetsConfiguration.Create(provider);
+                Arena = ArenaConfiguration.Create(provider);
 
                 log.LogInfo($"{nameof(ModConfiguration)} initialized successfully.");
             }

@@ -1,12 +1,14 @@
 ﻿using System;
 using System.Reflection;
 using BepInEx;
+using BepInEx.Configuration;
 using HarmonyLib;
 using Memoria.FrontMission1.Core;
+using Memoria.FrontMission1.HarmonyHooks;
 
 namespace Memoria.FrontMission1.Shared;
 
-[BepInPlugin(ModConstants.Id, "Memoria Songs Of Conquest", "1.0.0.0")]
+[BepInPlugin(ModConstants.Id, "Memoria FRONT MISSION 1st: Remake", "1.0.0.0")]
 public class EntryPoint : BaseUnityPlugin
 {
     void Awake()
@@ -15,6 +17,8 @@ public class EntryPoint : BaseUnityPlugin
         {
             Logger.LogMessage("Initializing...");
 
+            PatchCriticalMethods();
+            
             SingletonInitializer singletonInitializer = new(Logger);
             singletonInitializer.InitializeInGameSingleton();
 
@@ -25,6 +29,20 @@ public class EntryPoint : BaseUnityPlugin
         {
             Logger.LogError($"Failed to initialize the mod: {ex}");
             throw;
+        }
+    }
+    
+    private void PatchCriticalMethods()
+    {
+        try
+        {
+            Logger.LogInfo("[Harmony] Patching critical methods...");
+            Harmony harmony = new Harmony(ModConstants.Id);
+            ConfigDescription_Description.Patch(harmony, Logger);
+        }
+        catch (Exception ex)
+        {
+            throw new Exception("Failed to patch methods.", ex);
         }
     }
 
@@ -41,9 +59,6 @@ public class EntryPoint : BaseUnityPlugin
                 if (processor.Patch()?.Count > 0)
                     Logger.LogInfo($"[Harmony] {type.Name} successfully applied.");
             }
-            // AccessTools.GetTypesFromAssembly(assembly).Do(type => harmony.CreateClassProcessor(type).Patch());
-            // //public void PatchAll(Assembly assembly) => ((IEnumerable<Type>) AccessTools.GetTypesFromAssembly(assembly)).Do<Type>((Action<Type>) (type => this.CreateClassProcessor(type).Patch()));
-            // harmony.PatchAll(Assembly.GetExecutingAssembly());
         }
         catch (Exception ex)
         {

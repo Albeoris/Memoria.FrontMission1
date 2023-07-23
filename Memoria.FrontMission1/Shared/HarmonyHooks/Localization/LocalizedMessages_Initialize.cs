@@ -2,6 +2,8 @@
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
+using System.Threading;
+using FE;
 using HarmonyLib;
 using Memoria.FrontMission1.BeepInEx;
 using Memoria.FrontMission1.Configuration;
@@ -39,7 +41,13 @@ public static class LocalizedMessages_Initialize
 	{
 		Dictionary<String, TransifexEntry> entries = new Dictionary<String, TransifexEntry>();
 		Dictionary<String, TransifexEntry> tags = new Dictionary<String, TransifexEntry>();
-		ReadJson(files, entries, tags);
+
+		foreach (IGrouping<String, String> filesInFolder in files.GroupBy(Path.GetDirectoryName))
+		{
+			String[] ordered = filesInFolder.OrderBy(File.GetLastWriteTimeUtc).ToArray();
+			ReadJson(ordered, entries, tags);
+		}
+		
 		ApplyEntries(entries, messageInfos);
 		ApplyTags(tags, messageInfos);
 	}
@@ -52,6 +60,20 @@ public static class LocalizedMessages_Initialize
 			{
 				String extension = Path.GetExtension(filePath);
 				String fileName = Path.GetFileNameWithoutExtension(filePath);
+
+				if (fileName == "for_use_front-mission-1st-remake_msg_01json_ru_RU"
+				    || fileName == "for_use_front-mission-1st-remake_msgjson_ru_RU"
+				    || fileName == "for_use_front-mission-1st-remake_otherjson_ru_RU"
+				    || fileName == "for_use_front-mission-1st-remake_tagsjson_ru_RU"
+				    || fileName == "for_use_front-mission-1st-remake_ui_wrapper_buttonjson_ru_RU"
+				    || fileName == "for_use_front-mission-1st-remake_ui_wrapperjson_ru_RU"
+				    || fileName == "for_use_front-mission-1st-remake_uijson_ru_RU")
+				{
+					File.Delete(filePath);
+					continue;
+				}
+					
+				
 				switch (extension)
 				{
 					case ".json":
@@ -61,7 +83,8 @@ public static class LocalizedMessages_Initialize
 					}
 					default:
 					{
-						throw new NotSupportedException(extension);
+						ModComponent.Log.LogWarning($"File with the {extension} extension cannot be used as a localization source. File: {filePath}");
+						break;
 					}
 				}
 			}
