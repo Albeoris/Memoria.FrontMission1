@@ -20,6 +20,7 @@ If you playing on Steam Deck check [this page](https://github.com/Albeoris/Memor
 - You can increase game speed (Default Key: F1).
 - You can [localize texts](https://github.com/Albeoris/Memoria.FrontMission1/wiki/Features-Assets.cfg) (Enabled by default)
 - You can [disable arena grinding](https://github.com/Albeoris/Memoria.FrontMission1/wiki/Features-Arena.cfg)
+- You can [see better attack range](https://github.com/Albeoris/Memoria.FrontMission1/wiki/Features-Battlefield.cfg) (Enabled by default)
 
 ## Configuration:
 1. Start the game first.
