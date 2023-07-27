@@ -60,19 +60,6 @@ public static class LocalizedMessages_Initialize
 			{
 				String extension = Path.GetExtension(filePath);
 				String fileName = Path.GetFileNameWithoutExtension(filePath);
-
-				if (fileName == "for_use_front-mission-1st-remake_msg_01json_ru_RU"
-				    || fileName == "for_use_front-mission-1st-remake_msgjson_ru_RU"
-				    || fileName == "for_use_front-mission-1st-remake_otherjson_ru_RU"
-				    || fileName == "for_use_front-mission-1st-remake_tagsjson_ru_RU"
-				    || fileName == "for_use_front-mission-1st-remake_ui_wrapper_buttonjson_ru_RU"
-				    || fileName == "for_use_front-mission-1st-remake_ui_wrapperjson_ru_RU"
-				    || fileName == "for_use_front-mission-1st-remake_uijson_ru_RU")
-				{
-					File.Delete(filePath);
-					continue;
-				}
-					
 				
 				switch (extension)
 				{

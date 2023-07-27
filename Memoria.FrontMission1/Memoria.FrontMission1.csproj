@@ -62,6 +62,7 @@
 		<Reference Include="UnityEngine.InputLegacyModule" />
 		<Reference Include="UnityEngine.IMGUIModule" />
 		<Reference Include="Assembly-CSharp.dll" />
+		<Reference Include="AstarPathfindingProject.dll" />
 	</ItemGroup>
 		
 	<ItemGroup>

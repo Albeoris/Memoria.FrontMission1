@@ -19,6 +19,7 @@ public sealed class ModComponent : MonoBehaviour
     [field: NonSerialized] public ModConfiguration Config { get; private set; }
     [field: NonSerialized] public GameSpeedControl SpeedControl { get; private set; }
     [field: NonSerialized] public ModFileResolver ModFiles { get; private set; }
+    [field: NonSerialized] public LocalizationControl Localization { get; private set; }
     [field: NonSerialized] public ArenaWinsControl ArenaWins { get; private set; }
 
     private Boolean _isDisabled;
@@ -34,6 +35,7 @@ public sealed class ModComponent : MonoBehaviour
             Config = new ModConfiguration();
             SpeedControl = new GameSpeedControl();
             ModFiles = new ModFileResolver();
+            Localization = new LocalizationControl();
 
             ArenaWins = new ArenaWinsControl();
 
@@ -74,6 +76,7 @@ public sealed class ModComponent : MonoBehaviour
                 return;
 
             ModFiles.TryUpdate();
+            Localization.TryUpdate();
         }
         catch (Exception ex)
         {

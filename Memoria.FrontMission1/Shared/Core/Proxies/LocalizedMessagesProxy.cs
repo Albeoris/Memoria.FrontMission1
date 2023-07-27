@@ -11,6 +11,7 @@ public static class LocalizedMessagesProxy
 
     public static void SetLanguage(Localization.GameLanguage newLanguage, Boolean force, Boolean callEvent)
     {
+        TalkGroup_GetNextCommand.RepeatLast = true;
         Localization_SetLanguage.Invoke(obj: null, new Object[] { newLanguage, force, callEvent });
     }
 }
