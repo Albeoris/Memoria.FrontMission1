@@ -6,7 +6,7 @@ This is a small modification that makes gameplay of [FRONT MISSION 1st: Remake](
 
 ## Installation:
 - Unpack [BepInEx_UnityMono_x64_6.0.0-pre.1](https://github.com/Albeoris/Memoria.FrontMission1/releases/download/v2023.07.24/BepInEx_UnityMono_x64_6.0.0-pre.1.zip) into the game folder.
-- Unpack the [mod](https://github.com/Albeoris/Memoria.FrontMission1/releases/download/v2023.07.24/Memoria.FrontMission1.Steam_GOG_v2023.07.24.zip) archive into the game folder.
+- Unpack the [mod](https://github.com/Albeoris/Memoria.FrontMission1/releases/download/v2023.07.28/Memoria.FrontMission1.Steam_GOG_v2023.07.28.zip) archive into the game folder.
 
 If you are already using BepInEx to load other mods, use the most recent version of the loader.
 
