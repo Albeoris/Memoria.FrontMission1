@@ -30,3 +30,7 @@ If you playing on Steam Deck check [this page](https://github.com/Albeoris/Memor
 ## Troubleshooting:
 - Share mod logs: $GameFolder$\BepInEx\LogOutput.log
 - Create an issue.
+
+## Screenshots:
+![DisplayAttackRangeWithMovement](https://github.com/Albeoris/Memoria.FrontMission1/assets/4787832/8e792cb0-b67c-4c2f-aa9f-d615103258c1)
+![DisplayAttackRangeOnCell](https://github.com/Albeoris/Memoria.FrontMission1/assets/4787832/47a648d7-9361-4366-9980-42e238d6b7fd)
