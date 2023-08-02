@@ -6,7 +6,7 @@ This is a small modification that makes gameplay of [FRONT MISSION 1st: Remake](
 
 ## Installation:
 - Unpack [BepInEx_UnityMono_x64_6.0.0-pre.1](https://github.com/Albeoris/Memoria.FrontMission1/releases/download/v2023.07.24/BepInEx_UnityMono_x64_6.0.0-pre.1.zip) into the game folder.
-- Unpack the [mod](https://github.com/Albeoris/Memoria.FrontMission1/releases/download/v2023.07.24/Memoria.FrontMission1.Steam_GOG_v2023.07.24.zip) archive into the game folder.
+- Unpack the [mod](https://github.com/Albeoris/Memoria.FrontMission1/releases/download/v2023.07.28/Memoria.FrontMission1.Steam_GOG_v2023.07.28.zip) archive into the game folder.
 
 If you are already using BepInEx to load other mods, use the most recent version of the loader.
 
@@ -17,9 +17,10 @@ If you playing on Steam Deck check [this page](https://github.com/Albeoris/Memor
 - To remove the mod launcer - delete $GameFolder$\winhttp.dll
 
 ## Features:
-- You can increase game speed (Default Key: F1).
+- You can [increase game speed](https://github.com/Albeoris/Memoria.FrontMission1/wiki/Features-Speed.cfg) (Default Key: F1).
 - You can [localize texts](https://github.com/Albeoris/Memoria.FrontMission1/wiki/Features-Assets.cfg) (Enabled by default)
 - You can [disable arena grinding](https://github.com/Albeoris/Memoria.FrontMission1/wiki/Features-Arena.cfg)
+- You can [see better attack range](https://github.com/Albeoris/Memoria.FrontMission1/wiki/Features-Battlefield.cfg) (Enabled by default)
 
 ## Configuration:
 1. Start the game first.
@@ -29,3 +30,7 @@ If you playing on Steam Deck check [this page](https://github.com/Albeoris/Memor
 ## Troubleshooting:
 - Share mod logs: $GameFolder$\BepInEx\LogOutput.log
 - Create an issue.
+
+## Screenshots:
+![DisplayAttackRangeWithMovement](https://github.com/Albeoris/Memoria.FrontMission1/assets/4787832/8e792cb0-b67c-4c2f-aa9f-d615103258c1)
+![DisplayAttackRangeOnCell](https://github.com/Albeoris/Memoria.FrontMission1/assets/4787832/47a648d7-9361-4366-9980-42e238d6b7fd)
