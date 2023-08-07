@@ -6,6 +6,7 @@ namespace Memoria.FrontMission1.Configuration;
 public sealed partial class ModConfiguration
 {
     public SpeedConfiguration Speed { get; }
+    public SavesConfiguration Saves { get; }
     public AssetsConfiguration Assets { get; }
     public ArenaConfiguration Arena { get; }
     public BattlefieldConfiguration Battlefield { get; }
@@ -20,6 +21,7 @@ public sealed partial class ModConfiguration
 
                 ConfigFileProvider provider = new();
                 Speed = SpeedConfiguration.Create(provider);
+                Saves = SavesConfiguration.Create(provider);
                 Assets = AssetsConfiguration.Create(provider);
                 Arena = ArenaConfiguration.Create(provider);
                 Battlefield = BattlefieldConfiguration.Create(provider);
