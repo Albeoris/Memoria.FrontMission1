@@ -16,17 +16,19 @@
 	
 	<PropertyGroup>
 		<AssemblyName>Memoria.FrontMission1.$(Configuration)</AssemblyName>
-		<GameRegistryPath Condition=" '$(Configuration)' == 'Steam' ">HKEY_LOCAL_MACHINE\Software\Microsoft\Windows\CurrentVersion\Uninstall\Steam App 2399730</GameRegistryPath>
-	</PropertyGroup>
-	
-	<PropertyGroup Condition="'$(GameRegistryPath)' != ''">
-		<GamePath Condition="'$(GamePath)' == ''">$([MSBuild]::GetRegistryValueFromView('$(GameRegistryPath)', 'InstallLocation', null, RegistryView.Registry32))</GamePath>
-		<GamePath Condition="'$(GamePath)' == ''">$([MSBuild]::GetRegistryValueFromView('$(GameRegistryPath)', 'InstallLocation', null, RegistryView.Registry64))</GamePath>
+		
+		<!-- Steam -->
+		<GamePath Condition="'$(GamePath)' == ''">$([MSBuild]::GetRegistryValueFromView('HKEY_LOCAL_MACHINE\Software\Microsoft\Windows\CurrentVersion\Uninstall\Steam App 2399730', 'InstallLocation', null, RegistryView.Registry32))</GamePath>
+		<GamePath Condition="'$(GamePath)' == ''">$([MSBuild]::GetRegistryValueFromView('HKEY_LOCAL_MACHINE\Software\Microsoft\Windows\CurrentVersion\Uninstall\Steam App 2399730', 'InstallLocation', null, RegistryView.Registry64))</GamePath>
+		
+		<!-- GOG -->
+		<GamePath Condition="'$(GamePath)' == ''">$([MSBuild]::GetRegistryValueFromView('HKEY_LOCAL_MACHINE\Software\GOG.com\Games\1111530020', 'path', null, RegistryView.Registry32))</GamePath>
+		<GamePath Condition="'$(GamePath)' == ''">$([MSBuild]::GetRegistryValueFromView('HKEY_LOCAL_MACHINE\Software\GOG.com\Games\1111530020', 'path', null, RegistryView.Registry64))</GamePath>
+		
 		<GamePath Condition="'$(GamePath)' == ''">bin\$(AssemblyName)</GamePath>
 		<FrameworkPathOverride>$(GamePath)\FRONT MISSION 1st Remake_Data\Managed</FrameworkPathOverride>
 		<OutputPath>$(GamePath)\BepInEx\plugins\</OutputPath>
 	</PropertyGroup>
-	
 	
 	<ItemGroup>
 		<Compile Remove="Steam\**\*.cs" />	
@@ -61,6 +63,7 @@
 		<Reference Include="UnityEngine.InputModule" />
 		<Reference Include="UnityEngine.InputLegacyModule" />
 		<Reference Include="UnityEngine.IMGUIModule" />
+		<Reference Include="UnityEngine.VideoModule" />
 		<Reference Include="Assembly-CSharp.dll" />
 		<Reference Include="AstarPathfindingProject.dll" />
 	</ItemGroup>
