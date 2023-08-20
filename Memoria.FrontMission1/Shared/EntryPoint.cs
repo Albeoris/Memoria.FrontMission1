@@ -6,7 +6,7 @@ using HarmonyLib;
 using Memoria.FrontMission1.Core;
 using Memoria.FrontMission1.HarmonyHooks;
 
-namespace Memoria.FrontMission1.Shared;
+namespace Memoria.FrontMission1;
 
 [BepInPlugin(ModConstants.Id, "Memoria FRONT MISSION 1st: Remake", "1.0.0.0")]
 public class EntryPoint : BaseUnityPlugin
