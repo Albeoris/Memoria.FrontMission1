@@ -10,6 +10,7 @@ public sealed partial class ModConfiguration
     public AssetsConfiguration Assets { get; }
     public ArenaConfiguration Arena { get; }
     public BattlefieldConfiguration Battlefield { get; }
+    public DebugConfiguration Debug { get; }
 
     public ModConfiguration()
     {
@@ -25,6 +26,7 @@ public sealed partial class ModConfiguration
                 Assets = AssetsConfiguration.Create(provider);
                 Arena = ArenaConfiguration.Create(provider);
                 Battlefield = BattlefieldConfiguration.Create(provider);
+                Debug = DebugConfiguration.Create(provider);
 
                 log.LogInfo($"{nameof(ModConfiguration)} initialized successfully.");
             }
