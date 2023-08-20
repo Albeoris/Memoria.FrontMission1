@@ -21,6 +21,7 @@ public sealed class ModComponent : MonoBehaviour
     [field: NonSerialized] public ModFileResolver ModFiles { get; private set; }
     [field: NonSerialized] public LocalizationControl Localization { get; private set; }
     [field: NonSerialized] public ArenaWinsControl ArenaWins { get; private set; }
+    [field: NonSerialized] public GameVideoControl VideoControl { get; private set; }
 
     private Boolean _isDisabled;
 
@@ -36,6 +37,7 @@ public sealed class ModComponent : MonoBehaviour
             SpeedControl = new GameSpeedControl();
             ModFiles = new ModFileResolver();
             Localization = new LocalizationControl();
+            VideoControl = new GameVideoControl();
 
             ArenaWins = new ArenaWinsControl();
 
@@ -77,6 +79,7 @@ public sealed class ModComponent : MonoBehaviour
 
             ModFiles.TryUpdate();
             Localization.TryUpdate();
+            VideoControl.TryUpdate();
         }
         catch (Exception ex)
         {
@@ -98,6 +101,20 @@ public sealed class ModComponent : MonoBehaviour
         {
             _isDisabled = true;
             Log.LogError($"[{nameof(ModComponent)}].{nameof(LateUpdate)}(): {ex}");
+        }
+    }
+
+    private void OnGUI()
+    {
+        try
+        {
+            if (_isDisabled)
+                return;
+        }
+        catch (Exception ex)
+        {
+            _isDisabled = true;
+            Log.LogError($"[{nameof(ModComponent)}].{nameof(OnGUI)}(): {ex}");
         }
     }
 }
