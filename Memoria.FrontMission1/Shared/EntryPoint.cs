@@ -21,7 +21,7 @@ public class EntryPoint : BaseUnityPlugin
             
             SingletonInitializer singletonInitializer = new(Logger);
             singletonInitializer.InitializeInGameSingleton();
-
+            
             PatchMethods();
             Logger.LogMessage("The mod has been successfully initialized.");
         }

@@ -9,14 +9,14 @@ namespace Memoria.FrontMission1.Core;
 
 public static class UIBuilder
 {
-    public static GameObject CreateUiObject(String name, GameObject parent)
+    public static GameObject CreateUiObject(String name, Transform parent)
     {
         GameObject gameObject = new GameObject();
         ConfigureUiObject(gameObject, name, parent);
         return gameObject;
     }
 
-    public static void ConfigureUiObject(GameObject gameObject, String name, GameObject parent)
+    public static void ConfigureUiObject(GameObject gameObject, String name, Transform parent)
     {
         gameObject.name = $"{ModConstants.Id}: {name}";
         gameObject.layer = LayerMask.NameToLayer("UI");
@@ -28,7 +28,7 @@ public static class UIBuilder
         }
     }
 
-    public static Canvas CreateCanvas(String name, GameObject parent)
+    public static Canvas CreateCanvas(String name, Transform parent)
     {
         GameObject gameObject = CreateUiObject(name, parent);
 
@@ -43,7 +43,7 @@ public static class UIBuilder
         return canvas;
     }
     
-    public static TMPButton CreateButton(String name, GameObject parent)
+    public static TMPButton CreateButton(String name, Transform parent)
     {
         TMP_DefaultControls.Resources resources = new TMP_DefaultControls.Resources();
 

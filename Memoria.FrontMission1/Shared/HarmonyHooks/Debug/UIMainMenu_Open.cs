@@ -24,11 +24,11 @@ internal static class UIMainMenu_Open
 
             _canvas = UIBuilder.CreateCanvas("Debug Menu", parent: null);
 
-            GameObject hiddenPanel = CreatePanel("HiddenPanel", _canvas.gameObject);
+            GameObject hiddenPanel = CreatePanel("HiddenPanel", _canvas.transform);
             
-            AddButton("Open Scene List", hiddenPanel, ShowSceneDebug);
+            AddButton("Open Scene List", hiddenPanel.transform, ShowSceneDebug);
 
-            TMPButton debugButton = AddButton("Show / Hide", _canvas.gameObject,
+            TMPButton debugButton = AddButton("Show / Hide", _canvas.transform,
                 () => { hiddenPanel.SetActive(!hiddenPanel.activeSelf); }
             );
 
@@ -49,7 +49,7 @@ internal static class UIMainMenu_Open
         LoadingScreen.Instance.LoadScenarioTestingScene();
     }
 
-    private static GameObject CreatePanel(String name, GameObject parent)
+    private static GameObject CreatePanel(String name, Transform parent)
     {
         GameObject newPanel = UIBuilder.CreateUiObject(name, parent);
 
@@ -73,7 +73,7 @@ internal static class UIMainMenu_Open
         return newPanel;
     }
 
-    private static TMPButton AddButton(String name, GameObject parent, Action callback)
+    private static TMPButton AddButton(String name, Transform parent, Action callback)
     {
         TMPButton button = UIBuilder.CreateButton(name, parent);
         button.Text = name;
