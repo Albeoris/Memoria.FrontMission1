@@ -16,7 +16,7 @@ public class UIBonusExpPanel_Open
         {
             if (___localizedTitleText.TextField.fontSize != fontSize)
             {
-                TMProResizer.Resize(___localizedTitleText.gameObject, fontSize);
+                TMProResizer.Resize(___localizedTitleText.transform.parent.gameObject, fontSize);
                 ___localizedTitleText.TextField.fontSize = fontSize;
             }
         }
