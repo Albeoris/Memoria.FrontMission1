@@ -34,6 +34,9 @@
 		<Compile Remove="Steam\**\*.cs" />	
 		<None Include="Steam\**\*.cs" />
 		<Compile Include="$(Configuration)\**\*.cs" />
+		<None Update="System.Runtime.Serialization.dll">
+		  <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+		</None>
 	</ItemGroup>
   
 	<ItemGroup>

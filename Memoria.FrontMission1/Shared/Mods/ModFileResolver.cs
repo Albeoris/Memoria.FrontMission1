@@ -10,7 +10,7 @@ using Walker;
 
 namespace Memoria.FrontMission1.Mods;
 
-public sealed class ModFileResolver : SafeComponent
+public sealed class ModFileResolver : SafeComponent, IModFileResolver
 {
     private readonly Object _lock = new();
     private readonly String _modsRoot;

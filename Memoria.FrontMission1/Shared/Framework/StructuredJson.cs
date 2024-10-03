@@ -8,12 +8,43 @@ namespace Memoria.FrontMission1.HarmonyHooks;
 
 public static class StructuredJson
 {
+    // We cannot use JsonSerializer because of framework version
     public static void Write(String outputPath, OrderedDictionary<String, TransifexEntry> map)
     {
         using (StreamWriter output = File.CreateText(outputPath))
         {
-            JsonSerializer jsonWriter = new JsonSerializer { NullValueHandling = NullValueHandling.Ignore };
-            jsonWriter.Serialize(output, map);
+            JsonTextWriter writer = new JsonTextWriter(output);
+            writer.Formatting = Formatting.Indented;
+            writer.WriteStartObject();
+            foreach ((string key, TransifexEntry value) in map)
+            {
+                writer.WritePropertyName(key);
+                writer.WriteStartObject();
+                {
+                    writer.WritePropertyName("string");
+                    writer.WriteValue(value.Text);
+
+                    if (value.Context != null)
+                    {
+                        writer.WritePropertyName("context");
+                        writer.WriteValue(value.Context);
+                    }
+                    
+                    if (value.Comment != null)
+                    {
+                        writer.WritePropertyName("developer_comment");
+                        writer.WriteValue(value.Comment);
+                    }
+                    
+                    if (value.CharacterLimit != null)
+                    {
+                        writer.WritePropertyName("character_limit");
+                        writer.WriteValue(value.CharacterLimit);
+                    }
+                }
+                writer.WriteEndObject();
+            }
+            writer.WriteEndObject();
         }
     }
 

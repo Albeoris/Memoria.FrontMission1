@@ -5,15 +5,24 @@ namespace Memoria.FrontMission1.Configuration;
 [ConfigScope("Assets")]
 public abstract partial class AssetsConfiguration
 {
-    // [ConfigEntry($"Export the supported resources to the {nameof(ExportDirectory)}.")]
-    // public virtual Boolean ExportEnabled { get; set; } = false;
-    //
-    // [ConfigEntry($"Directory into which the supported resources will be exported.")]
-    // [ConfigConverter(nameof(ExportDirectoryConverter))]
-    // public virtual String ExportDirectory => "%StreamingAssets%";
-    //
-    // [ConfigEntry($"Export text resources: .txt, .csv, .json, etc.")]
-    // public virtual Boolean ExportText => true;
+    [ConfigEntry($"Export the supported resources to the {nameof(ExportDirectory)}.")]
+    public virtual Boolean ExportEnabled { get; set; } = false;
+    
+    [ConfigEntry($"Automatically disable export after successful completion.")]
+    public virtual Boolean ExportAutoDisable => true;
+    
+    [ConfigEntry($"Overwrites files that exist in the export directory. All your changes will be lost.")]
+    public virtual Boolean ExportOverwrite => false;
+
+    [ConfigEntry($"Allows logging already exported resources during export.")]
+    public virtual Boolean ExportLogAlreadyExportedAssets => false;
+
+    [ConfigEntry($"Directory into which the supported resources will be exported.")]
+    [ConfigConverter(nameof(ExportDirectoryConverter))]
+    public virtual String ExportDirectory => "%StreamingAssets%";
+    
+    [ConfigEntry($"Export text localization resources: .json")]
+    public virtual Boolean ExportLocalization => true;
 
     // [ConfigEntry($"Import the supported resources from the {nameof(ImportDirectory)}.")]
     // public virtual Boolean ImportEnabled => true;
@@ -39,12 +48,12 @@ public abstract partial class AssetsConfiguration
     [ConfigDependency(nameof(ModsEnabled), "String.Empty")]
     public virtual String ModsDirectory => "%StreamingAssets%/Mods";
 
-    // protected IAcceptableValue<String> ExportDirectoryConverter { get; } = new AcceptableDirectoryPath(nameof(ExportDirectory));
+    protected IAcceptableValue<String> ExportDirectoryConverter { get; } = new AcceptableDirectoryPath(nameof(ExportDirectory), create: true);
     // protected IAcceptableValue<String> ImportDirectoryConverter { get; } = new AcceptableDirectoryPath(nameof(ImportDirectory));
     protected IAcceptableValue<String> ModsDirectoryConverter { get; } = new AcceptableDirectoryPath(nameof(ModsDirectory), create: true);
 
     public abstract void CopyFrom(AssetsConfiguration configuration);
 
-    // public String GetExportDirectoryIfEnabled() => ExportEnabled ? ExportDirectory : String.Empty;
+    public String GetExportDirectoryIfEnabled() => ExportEnabled ? ExportDirectory : String.Empty;
     // public String GetImportDirectoryIfEnabled() => ImportEnabled ? ImportDirectory : String.Empty;
 }

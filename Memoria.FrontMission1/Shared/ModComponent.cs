@@ -2,12 +2,11 @@
 using BepInEx.Logging;
 using Memoria.FrontMission1.Configuration;
 using Memoria.FrontMission1.Core;
+using Memoria.FrontMission1.Export;
 using Memoria.FrontMission1.Mods;
 using UnityEngine;
-using Walker;
 using Exception = System.Exception;
 using Logger = BepInEx.Logging.Logger;
-using Object = System.Object;
 
 namespace Memoria.FrontMission1;
 
@@ -18,7 +17,7 @@ public sealed class ModComponent : MonoBehaviour
 
     [field: NonSerialized] public ModConfiguration Config { get; private set; }
     [field: NonSerialized] public GameSpeedControl SpeedControl { get; private set; }
-    [field: NonSerialized] public ModFileResolver ModFiles { get; private set; }
+    [field: NonSerialized] public IModFileResolver ModFiles { get; private set; }
     [field: NonSerialized] public LocalizationControl Localization { get; private set; }
     [field: NonSerialized] public ArenaWinsControl ArenaWins { get; private set; }
     [field: NonSerialized] public GameVideoControl VideoControl { get; private set; }
@@ -35,11 +34,13 @@ public sealed class ModComponent : MonoBehaviour
 
             Config = new ModConfiguration();
             SpeedControl = new GameSpeedControl();
-            ModFiles = new ModFileResolver();
+            ModFiles = Config.Assets.ExportEnabled ? EmptyModFileResolver.Instance : new ModFileResolver();
             Localization = new LocalizationControl();
             VideoControl = new GameVideoControl();
 
             ArenaWins = new ArenaWinsControl();
+            
+            gameObject.AddComponent<ResourceExporter>();
 
             Log.LogMessage($"[{nameof(ModComponent)}].{nameof(Awake)}(): Processed successfully.");
         }
